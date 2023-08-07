@@ -1,0 +1,27 @@
+ul {
+    all: unset;
+    width: 600px;
+    height: 40vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+li {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 8px;
+}
+
+.info {
+    display: flex;
+    justify-content: end;
+}
+
+.priceWrapper {
+    display: flex;
+    align-items: center;
+}
