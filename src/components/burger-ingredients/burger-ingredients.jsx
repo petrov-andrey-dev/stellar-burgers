@@ -30,7 +30,7 @@ export default function BurgerIngredients({data}) {
     return (
         <section className={`${ingredientStyles.wrapper}`}>
             <h1 className="mt-10 text text_type_main-large">Соберите бургер</h1>
-            <div style={{ display: 'flex' }} className="pt-5">
+            <div className={`${ingredientStyles.tabs} pt-5`}>
                 <Tab value="buns" active={current === 'buns'} onClick={setCurrent}>
                     Булки
                 </Tab>

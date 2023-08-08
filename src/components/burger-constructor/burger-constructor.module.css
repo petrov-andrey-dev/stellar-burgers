@@ -1,18 +1,17 @@
 ul {
     all: unset;
     width: 600px;
-    height: 40vh;
+    height: 24vh;
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 }
 
 li {
     all: unset;
     display: flex;
     align-items: center;
-    justify-content: end;
     gap: 8px;
 }
 
