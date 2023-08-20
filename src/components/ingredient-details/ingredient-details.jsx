@@ -7,7 +7,7 @@ export default function IngredientDetails({ details }) {
             <h2 className="text text_type_main-large">
                 Детали ингредиента
             </h2>
-            <img src={details.image} alt={details.name} />
+            <img src={details.image_large} alt={details.name} />
             <p className="text text_type_main-medium mt-4">{details.name}</p>
             <ul className={`${ingredientDetailsStyles.nutritionList}`}>
                 <li className={ingredientDetailsStyles.nutritionItem}>

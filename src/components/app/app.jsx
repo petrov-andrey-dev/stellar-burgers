@@ -24,10 +24,11 @@ function App() {
   React.useEffect(() => {
     setState({ ...state, hasError: false, isLoading: true });
     fetch('https://norma.nomoreparties.space/api/ingredients')
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
       .then(json => setState({ ...state, data: json.data, isLoading: false }))
       .catch(e => {
         setState({ ...state, hasError: true, isLoading: false });
+        console.log(e);
       });
   }, []);
 
@@ -48,8 +49,8 @@ function App() {
       {
         stateModal.isActive &&
         <Modal onClose={() => setStateModal({ ...stateModal, isActive: false })} >
-          {stateModal.type === 'order' && <OrderDetails />};
-          {stateModal.type === 'details' && <IngredientDetails details={stateModal.details} />};
+          {stateModal.type === 'order' && <OrderDetails />}
+          {stateModal.type === 'details' && <IngredientDetails details={stateModal.details} />}
         </Modal>
       }
 

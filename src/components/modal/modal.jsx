@@ -9,13 +9,13 @@ const rootModal = document.querySelector('#root-modals');
 
 export default function Modal({ children, onClose }) {
 
-    const onCloseEsc = (e) => {
-        if (e.key === 'Escape') {
-            onClose()
-        }
-    };
-
     React.useEffect(() => {
+        const onCloseEsc = (e) => {
+            if (e.key === 'Escape') {
+                onClose()
+            }
+        };
+
         document.addEventListener('keydown', onCloseEsc);
 
         return () => {
