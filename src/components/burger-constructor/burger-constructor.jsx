@@ -8,7 +8,7 @@ import constructorStyles from "./burger-constructor.module.css";
 import PropTypes from 'prop-types';
 import { ingredientPropType } from "../../utils/prop-types";
 
-export default function BurgerConstructor({ data }) {
+export default function BurgerConstructor({ data, stateModal, setStateModal }) {
     const bunsArray = data.filter(item => item.type === 'bun');
     const firstBun = bunsArray[0];
     const otheringredientsArray = data.filter(item => item.type === 'main' || item.type === 'sauce');
@@ -24,10 +24,10 @@ export default function BurgerConstructor({ data }) {
                 thumbnail={firstBun.image}
                 extraClass="ml-10 mb-4"
             />
-            <ul className="custom-scroll pr-1 ml-2">
+            <ul className={`${constructorStyles.list} custom-scroll`}>
                 {
                     otheringredientsArray.map(item => (
-                        <li key={item._id}>
+                        <li key={item._id} className={constructorStyles.item}>
                             <DragIcon type="primary" />
                             <ConstructorElement
                                 text={item.name}
@@ -51,15 +51,17 @@ export default function BurgerConstructor({ data }) {
                     <p className="text text_type_digits-medium pr-2">{total}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large">
+                <Button htmlType="button" type="primary" size="large" onClick={() => setStateModal({ ...stateModal, isActive: true, type: 'order' })}>
                     Оформить заказ
                 </Button>
             </div>
 
         </section>
     )
-}
+};
 
 BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(ingredientPropType).isRequired
+    data: PropTypes.arrayOf(ingredientPropType).isRequired,
+    stateModal: PropTypes.object,
+    setStateModal: PropTypes.func.isRequired
 };

@@ -4,7 +4,7 @@ import {
     ListIcon,
     ProfileIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import headerStyles from "./app-header.module.css"
+import headerStyles from "./app-header.module.css";
 
 
 export default function AppHeader() {
@@ -36,4 +36,4 @@ export default function AppHeader() {
         </header>
 
     )
-}
+};
