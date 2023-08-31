@@ -20,9 +20,10 @@ export default function BurgerConstructor({ stateModal, setStateModal }) {
 
     const handleOnOrder = () => {
         const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
-        
+
         postOrder(orderDataOutput)
             .then(json => setStateModal({ ...stateModal, isActive: true, type: 'order', details: json }))
+            .then(dataContext.constuctorDataDispatch({ type: 'reset' }))
             .catch(console.error);
     };
 
@@ -73,7 +74,13 @@ export default function BurgerConstructor({ stateModal, setStateModal }) {
                     <p className="text text_type_digits-medium pr-2">{total}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large" onClick={handleOnOrder}>
+                <Button
+                    htmlType="button"
+                    type="primary"
+                    size="large"
+                    onClick={handleOnOrder}
+                    disabled={ bun ? false : true }
+                    >
                     Оформить заказ
                 </Button>
             </div>

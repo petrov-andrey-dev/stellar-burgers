@@ -40,6 +40,8 @@ function App() {
           ingredients: constructorData.ingredients.filter(item => item._id !== action.payload)
             
         }
+      case 'reset':
+        return constructorInitialData
     }
   };
 
