@@ -1,3 +1,5 @@
+/* eslint-disable default-case */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import s from "./app.module.css";
 import AppHeader from "../app-header/app-header";
@@ -7,6 +9,7 @@ import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import { DataContext, ConstructorContext } from "../../services/burgerContext";
+import { getIngredients } from "../../utils/api";
 
 function App() {
 
@@ -17,7 +20,6 @@ function App() {
   const [constructorData, constuctorDataDispatch] = React.useReducer(constructorDataReducer, constructorInitialData, undefined);
 
   function constructorDataReducer(constructorData, action) {
-    // eslint-disable-next-line default-case
     switch (action.type) {
       case 'add':
         return {
@@ -55,8 +57,7 @@ function App() {
 
   React.useEffect(() => {
     setState({ ...state, hasError: false, isLoading: true });
-    fetch('https://norma.nomoreparties.space/api/ingredients')
-      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+    getIngredients()
       .then(json => setState({ ...state, data: json.data, isLoading: false }))
       .catch(e => {
         setState({ ...state, hasError: true, isLoading: false });

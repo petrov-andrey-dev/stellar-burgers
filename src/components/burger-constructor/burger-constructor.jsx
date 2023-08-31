@@ -9,30 +9,21 @@ import s from "./burger-constructor.module.css";
 import PropTypes from 'prop-types';
 import { ingredientPropType } from "../../utils/prop-types";
 import { ConstructorContext } from "../../services/burgerContext";
+import { postOrder } from "../../utils/api";
 
 export default function BurgerConstructor({ stateModal, setStateModal }) {
     const dataContext = React.useContext(ConstructorContext);
 
     const bun = dataContext.constructorData.bun;
     const otheringredientsArray = dataContext.constructorData.ingredients;
-    const total = otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + ( bun ? bun.price * 2 : 0 );
+    const total = otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + (bun ? bun.price * 2 : 0);
 
     const handleOnOrder = () => {
         const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
-        fetch('https://norma.nomoreparties.space/api/orders', {
-            method: 'POST',
-            body: JSON.stringify({
-                ingredients: orderDataOutput
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`))
+        
+        postOrder(orderDataOutput)
             .then(json => setStateModal({ ...stateModal, isActive: true, type: 'order', details: json }))
-            .catch(e => {
-                console.log(e);
-            });
+            .catch(console.error);
     };
 
     return (
