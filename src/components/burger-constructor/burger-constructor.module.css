@@ -1,12 +1,21 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .list {
     all: unset;
     width: 600px;
     height: 24vh;
-    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     gap: 16px;
     margin-left: 8px;
+}
+
+.withScroll {
+    overflow-y: scroll;
 }
 
 .item {
@@ -24,4 +33,5 @@
 .priceWrapper {
     display: flex;
     align-items: center;
+    
 }
