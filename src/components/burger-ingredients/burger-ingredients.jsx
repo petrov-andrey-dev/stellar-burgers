@@ -1,30 +1,18 @@
 import React from "react";
-import {
-    Tab,
-    CurrencyIcon
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import ingredientStyles from "./burger-ingredients.module.css";
+import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import s from "./burger-ingredients.module.css";
 import PropTypes from 'prop-types';
 import { ingredientPropType } from "../../utils/prop-types";
+import { DataContext } from "../../services/burgerContext";
+import Ingredient from "../ingredient/ingredient";
 
-function Ingredient({ data, stateModal, setStateModal }) {
-    return (
-        <div className={ingredientStyles.item} onClick={() => setStateModal({ ...stateModal, isActive: true, type: 'details', details: { ...data } })}>
-            <img src={data.image} alt={data.name} className="pb-2" />
-            <div className={`${ingredientStyles.price} pb-2`}>
-                <p className="text text_type_digits-default pr-2">{data.price}</p>
-                <CurrencyIcon type="primary" />
-            </div>
-            <p className="text text_type_main-default pb-6">{data.name}</p>
-        </div>
-    )
-};
+export default function BurgerIngredients({ setStateModal }) {
+    const dataContext = React.useContext(DataContext);
 
-export default function BurgerIngredients({ data, setStateModal }) {
     const [current, setCurrent] = React.useState('buns');
-    const bunsArray = data.filter(item => item.type === 'bun');
-    const saucesArray = data.filter(item => item.type === 'sauce');
-    const mainsArray = data.filter(item => item.type === 'main');
+    const bunsArray = dataContext.state.data.filter(item => item.type === 'bun');
+    const saucesArray = dataContext.state.data.filter(item => item.type === 'sauce');
+    const mainsArray = dataContext.state.data.filter(item => item.type === 'main');
 
     function chooseCategory(value) {
         const categoryTitle = document.querySelector(`#${value}`);
@@ -34,9 +22,9 @@ export default function BurgerIngredients({ data, setStateModal }) {
     };
 
     return (
-        <section className={`${ingredientStyles.wrapper}`}>
+        <section className={`${s.wrapper}`}>
             <h1 className="mt-10 text text_type_main-large">Соберите бургер</h1>
-            <div className={`${ingredientStyles.tabs} pt-5`}>
+            <div className={`${s.tabs} pt-5`}>
                 <Tab value="buns" active={current === 'buns'} onClick={chooseCategory}>
                     Булки
                 </Tab>
@@ -47,9 +35,9 @@ export default function BurgerIngredients({ data, setStateModal }) {
                     Начинки
                 </Tab>
             </div>
-            <div className={`${ingredientStyles.ingredients} custom-scroll mt-10`}>
+            <div className={`${s.ingredients} custom-scroll mt-10`}>
                 <h2 id="buns" className="text text_type_main-medium ">Булки</h2>
-                <div className={`${ingredientStyles.items} pr-1 pl-4`}>
+                <div className={`${s.items} pr-1 pl-4`}>
                     {
                         bunsArray.map(item => (
                             <Ingredient data={item} key={item._id} setStateModal={setStateModal} />
@@ -57,7 +45,7 @@ export default function BurgerIngredients({ data, setStateModal }) {
                     }
                 </div>
                 <h2 id="sauces" className="text text_type_main-medium pt-10">Соусы</h2>
-                <div className={`${ingredientStyles.items} pr-1 pl-4`}>
+                <div className={`${s.items} pr-1 pl-4`}>
                     {
                         saucesArray.map(item => (
                             <Ingredient data={item} key={item._id} setStateModal={setStateModal} />
@@ -65,7 +53,7 @@ export default function BurgerIngredients({ data, setStateModal }) {
                     }
                 </div>
                 <h2 id="mains" className="text text_type_main-medium pt-10">Начинки</h2>
-                <div className={`${ingredientStyles.items} pr-1 pl-4`}>
+                <div className={`${s.items} pr-1 pl-4`}>
                     {
                         mainsArray.map(item => (
                             <Ingredient data={item} key={item._id} setStateModal={setStateModal} />
@@ -78,14 +66,8 @@ export default function BurgerIngredients({ data, setStateModal }) {
     )
 };
 
-Ingredient.propTypes = {
-    data: ingredientPropType.isRequired,
-    stateModal: PropTypes.object,
-    setStateModal: PropTypes.func.isRequired
-
-};
 
 BurgerIngredients.propTypes = {
-    data: PropTypes.arrayOf(ingredientPropType).isRequired,
+    data: PropTypes.arrayOf(ingredientPropType),
     setStateModal: PropTypes.func.isRequired
 };

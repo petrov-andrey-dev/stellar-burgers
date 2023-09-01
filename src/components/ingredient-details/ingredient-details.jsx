@@ -1,4 +1,4 @@
-import ingredientDetailsStyles from './ingredient-details.module.css';
+import s from './ingredient-details.module.css';
 import { ingredientPropType } from '../../utils/prop-types';
 
 export default function IngredientDetails({ details }) {
@@ -9,20 +9,20 @@ export default function IngredientDetails({ details }) {
             </h2>
             <img src={details.image_large} alt={details.name} />
             <p className="text text_type_main-medium mt-4">{details.name}</p>
-            <ul className={`${ingredientDetailsStyles.nutritionList}`}>
-                <li className={ingredientDetailsStyles.nutritionItem}>
+            <ul className={`${s.nutritionList}`}>
+                <li className={s.nutritionItem}>
                     <p className='text text_type_main-default text_color_inactive'>Калории,ккал</p>
                     <p className='text text_type_digits-default text_color_inactive'>{details.calories}</p>
                 </li>
-                <li className={ingredientDetailsStyles.nutritionItem}>
+                <li className={s.nutritionItem}>
                     <p className='text text_type_main-default text_color_inactive'>Белки, г</p>
                     <p className='text text_type_digits-default text_color_inactive'>{details.proteins}</p>
                 </li>
-                <li className={ingredientDetailsStyles.nutritionItem}>
+                <li className={s.nutritionItem}>
                     <p className='text text_type_main-default text_color_inactive'>Жиры, г</p>
                     <p className='text text_type_digits-default text_color_inactive'>{details.fat}</p>
                 </li>
-                <li className={ingredientDetailsStyles.nutritionItem}>
+                <li className={s.nutritionItem}>
                     <p className='text text_type_main-default text_color_inactive'>Углеводы, г</p>
                     <p className='text text_type_digits-default text_color_inactive'>{details.carbohydrates}</p>
                 </li>

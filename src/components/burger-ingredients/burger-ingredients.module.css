@@ -20,15 +20,6 @@
     row-gap: 32px;
 }
 
-.item {
-    width: 272px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-}
-
 .counter {
     position: absolute;
     top: 0;

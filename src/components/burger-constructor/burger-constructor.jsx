@@ -1,57 +1,86 @@
+import React from "react";
 import {
     ConstructorElement,
     DragIcon,
     CurrencyIcon,
     Button
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import constructorStyles from "./burger-constructor.module.css";
+import s from "./burger-constructor.module.css";
 import PropTypes from 'prop-types';
 import { ingredientPropType } from "../../utils/prop-types";
+import { ConstructorContext } from "../../services/burgerContext";
+import { postOrder } from "../../utils/api";
 
-export default function BurgerConstructor({ data, stateModal, setStateModal }) {
-    const bunsArray = data.filter(item => item.type === 'bun');
-    const firstBun = bunsArray[0];
-    const otheringredientsArray = data.filter(item => item.type === 'main' || item.type === 'sauce');
-    const total = otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + firstBun.price * 2;
+export default function BurgerConstructor({ stateModal, setStateModal }) {
+    const dataContext = React.useContext(ConstructorContext);
+
+    const bun = dataContext.constructorData.bun;
+    const otheringredientsArray = dataContext.constructorData.ingredients;
+    const total = otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + (bun ? bun.price * 2 : 0);
+
+    const handleOnOrder = () => {
+        const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
+
+        postOrder(orderDataOutput)
+            .then(json => setStateModal({ ...stateModal, isActive: true, type: 'order', details: json }))
+            .then(dataContext.constuctorDataDispatch({ type: 'reset' }))
+            .catch(console.error);
+    };
 
     return (
-        <section className="pt-25">
-            <ConstructorElement
-                type="top"
-                isLocked={true}
-                text={`${firstBun.name} (верх)`}
-                price={firstBun.price}
-                thumbnail={firstBun.image}
-                extraClass="ml-10 mb-4"
-            />
-            <ul className={`${constructorStyles.list} custom-scroll`}>
+        <section className={`${s.wrapper} pt-25`}>
+            {
+                bun &&
+                <ConstructorElement
+                    type="top"
+                    isLocked={true}
+                    text={`${bun.name} (верх)`}
+                    price={bun.price}
+                    thumbnail={bun.image}
+                    extraClass="ml-10 mb-4"
+                />
+            }
+            <ul className={`${s.list} ${otheringredientsArray.length > 2 ? s.withScroll : ''} custom-scroll`}>
                 {
+                    otheringredientsArray &&
                     otheringredientsArray.map(item => (
-                        <li key={item._id} className={constructorStyles.item}>
+                        <li key={item._id} className={s.item}>
                             <DragIcon type="primary" />
                             <ConstructorElement
                                 text={item.name}
                                 price={item.price}
                                 thumbnail={item.image}
+                                handleClose={() => {
+                                    dataContext.constuctorDataDispatch({ type: 'del', payload: item._id });
+                                }}
                             />
                         </li>
                     ))
                 }
             </ul>
-            <ConstructorElement
-                type="bottom"
-                isLocked={true}
-                text={`${firstBun.name} (низ)`}
-                price={firstBun.price}
-                thumbnail={firstBun.image}
-                extraClass="ml-10 mt-4"
-            />
-            <div className={`${constructorStyles.info} pt-10 pr-8`}>
-                <div className={`${constructorStyles.priceWrapper} pr-10`}>
+            {
+                bun &&
+                <ConstructorElement
+                    type="bottom"
+                    isLocked={true}
+                    text={`${bun.name} (низ)`}
+                    price={bun.price}
+                    thumbnail={bun.image}
+                    extraClass="ml-10 mt-4"
+                />
+            }
+            <div className={`${s.info} pt-10 pr-8`}>
+                <div className={`${s.priceWrapper} pr-10`}>
                     <p className="text text_type_digits-medium pr-2">{total}</p>
                     <CurrencyIcon type="primary" />
                 </div>
-                <Button htmlType="button" type="primary" size="large" onClick={() => setStateModal({ ...stateModal, isActive: true, type: 'order' })}>
+                <Button
+                    htmlType="button"
+                    type="primary"
+                    size="large"
+                    onClick={handleOnOrder}
+                    disabled={ bun ? false : true }
+                    >
                     Оформить заказ
                 </Button>
             </div>
@@ -61,7 +90,7 @@ export default function BurgerConstructor({ data, stateModal, setStateModal }) {
 };
 
 BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(ingredientPropType).isRequired,
+    data: PropTypes.arrayOf(ingredientPropType),
     stateModal: PropTypes.object,
     setStateModal: PropTypes.func.isRequired
 };
