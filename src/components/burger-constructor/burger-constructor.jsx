@@ -9,10 +9,14 @@ import s from "./burger-constructor.module.css";
 import PropTypes from 'prop-types';
 import { ingredientPropType } from "../../utils/prop-types";
 import { ConstructorContext } from "../../services/burgerContext";
-import { postOrder } from "../../utils/api";
+//import { postOrder } from "../../utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import { postOrder } from "../../services/actions/construcot";
 
 export default function BurgerConstructor({ stateModal, setStateModal }) {
     const dataContext = React.useContext(ConstructorContext);
+    const dispatch = useDispatch();
+    const {orderDetails, orderRequest, orderFailed} = useSelector(state => state.constructor)
 
     const bun = dataContext.constructorData.bun;
     const otheringredientsArray = dataContext.constructorData.ingredients;
@@ -20,11 +24,11 @@ export default function BurgerConstructor({ stateModal, setStateModal }) {
 
     const handleOnOrder = () => {
         const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
-
+        console.log("нажали");
         postOrder(orderDataOutput)
-            .then(json => setStateModal({ ...stateModal, isActive: true, type: 'order', details: json }))
-            .then(dataContext.constuctorDataDispatch({ type: 'reset' }))
-            .catch(console.error);
+            //.then(setStateModal({ ...stateModal, isActive: true, type: 'order', details: orderDetails }))
+            // .then(dataContext.constuctorDataDispatch({ type: 'reset' }))
+            // .catch(console.error);
     };
 
     return (
