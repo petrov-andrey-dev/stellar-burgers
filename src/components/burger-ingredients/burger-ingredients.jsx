@@ -1,18 +1,19 @@
-import React from "react";
+import {useState} from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import s from "./burger-ingredients.module.css";
 import PropTypes from 'prop-types';
 import { ingredientPropType } from "../../utils/prop-types";
-import { DataContext } from "../../services/burgerContext";
 import Ingredient from "../ingredient/ingredient";
+import { useSelector} from "react-redux";
+
 
 export default function BurgerIngredients({ setStateModal }) {
-    const dataContext = React.useContext(DataContext);
+    const { ingredients } = useSelector(state => state.ingredients)
 
-    const [current, setCurrent] = React.useState('buns');
-    const bunsArray = dataContext.state.data.filter(item => item.type === 'bun');
-    const saucesArray = dataContext.state.data.filter(item => item.type === 'sauce');
-    const mainsArray = dataContext.state.data.filter(item => item.type === 'main');
+    const [current, setCurrent] = useState('buns');
+    const bunsArray = ingredients.filter(item => item.type === 'bun');
+    const saucesArray = ingredients.filter(item => item.type === 'sauce');
+    const mainsArray = ingredients.filter(item => item.type === 'main');
 
     function chooseCategory(value) {
         const categoryTitle = document.querySelector(`#${value}`);

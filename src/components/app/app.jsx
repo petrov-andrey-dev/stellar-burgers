@@ -8,10 +8,12 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { DataContext, ConstructorContext } from "../../services/burgerContext";
-import { getIngredients } from "../../utils/api";
+import { ConstructorContext } from "../../services/burgerContext";
+import { useSelector, useDispatch } from "react-redux";
+import { loadIngredients } from "../../services/ingredientsSlice";
 
 function App() {
+  const { ingredients } = useSelector(state => state.ingredients)
 
   const constructorInitialData = {
     bun: null,
@@ -45,37 +47,25 @@ function App() {
     }
   };
 
-  const [state, setState] = React.useState({
-    isLoading: false,
-    hasError: false,
-    data: []
-  });
-
   const [stateModal, setStateModal] = React.useState({
     isActive: false,
     type: '',
     details: {}
   });
+  const dispatch = useDispatch()
 
   React.useEffect(() => {
-    setState({ ...state, hasError: false, isLoading: true });
-    getIngredients()
-      .then(json => setState({ ...state, data: json.data, isLoading: false }))
-      .catch(e => {
-        setState({ ...state, hasError: true, isLoading: false });
-        console.log(e);
-      });
+    dispatch(loadIngredients());
   }, []);
 
 
   return (
     <div className={`${s.app} p-10`}>
-      <DataContext.Provider value={{ state, setState }}>
-        <ConstructorContext.Provider value={{ constructorData, constuctorDataDispatch }}>
+        {/* <ConstructorContext.Provider value={{ constructorData, constuctorDataDispatch }}> */}
           <AppHeader />
           <main className="pb-10">
             {
-              state.data.length !== 0 &&
+              ingredients.length !== 0 &&
               <>
                 <BurgerIngredients stateModal={stateModal} setStateModal={setStateModal} />
                 <BurgerConstructor stateModal={stateModal} setStateModal={setStateModal} />
@@ -89,8 +79,7 @@ function App() {
               {stateModal.type === 'details' && <IngredientDetails details={stateModal.details} />}
             </Modal>
           }
-        </ConstructorContext.Provider>
-      </DataContext.Provider>
+        {/* </ConstructorContext.Provider> */}
     </div>
   );
 };
