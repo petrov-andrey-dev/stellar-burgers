@@ -1,42 +1,47 @@
-import React from "react";
 import {
     ConstructorElement,
-    DragIcon,
     CurrencyIcon,
     Button
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import s from "./burger-constructor.module.css";
-import PropTypes from 'prop-types';
-import { ingredientPropType } from "../../utils/prop-types";
-// import { ConstructorContext } from "../../services/burgerContext";
-import { postOrderRequest } from "../../utils/api";
 import { useSelector, useDispatch } from "react-redux";
-import { reset, del } from "../../services/constructorSlice";
+import { 
+    reset, 
+    addBun, 
+    add 
+} from "../../services/constructorSlice";
+import { openModal } from "../../services/modalSlice";
+import { loadOrderData } from "../../services/orderSlice";
+import { useDrop} from "react-dnd";
+import OtherIngredients from '../other-ingredients/other-ingredients'
 
-export default function BurgerConstructor({ stateModal, setStateModal }) {
-    // const dataContext = React.useContext(ConstructorContext);
-    
-    const i = useSelector(state => state)
-    console.log(i);
-    const {bun, otheringredientsArray} = useSelector(state => state.constructor)
-    
+
+export default function BurgerConstructor() {
+    const { bun, otheringredientsArray } = useSelector(state => state.constructorData)
     const dispatch = useDispatch();
 
-    // const bun = dataContext.constructorData.bun;
-    // const otheringredientsArray = dataContext.constructorData.ingredients;
     const total = otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + (bun ? bun.price * 2 : 0);
 
     const handleOnOrder = () => {
         const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
 
-        postOrderRequest(orderDataOutput)
-            .then(json => setStateModal({ ...stateModal, isActive: true, type: 'order', details: json }))
-            .then(dispatch(reset()))
-            .catch(console.error);
+        dispatch(loadOrderData(orderDataOutput))
+        dispatch(openModal({ type: 'order' }))
+        dispatch(reset())
     };
 
+    const [, dropTarget] = useDrop({
+        accept: 'ingredient',
+        drop(item) {
+            item.type === 'bun' ? dispatch(addBun(item)) : dispatch(add(item))
+        }
+    })
+
     return (
-        <section className={`${s.wrapper} pt-25`}>
+        <section 
+        className={`${s.wrapper} pt-25`} 
+        ref={dropTarget}
+        >
             {
                 bun &&
                 <ConstructorElement
@@ -51,20 +56,7 @@ export default function BurgerConstructor({ stateModal, setStateModal }) {
             <ul className={`${s.list} ${otheringredientsArray.length > 2 ? s.withScroll : ''} custom-scroll`}>
                 {
                     otheringredientsArray &&
-                    otheringredientsArray.map(item => (
-                        <li key={item._id} className={s.item}>
-                            <DragIcon type="primary" />
-                            <ConstructorElement
-                                text={item.name}
-                                price={item.price}
-                                thumbnail={item.image}
-                                handleClose={() => {
-                                    dispatch(del(item._id))
-                                    // dataContext.constuctorDataDispatch({ type: 'del', payload: item._id });
-                                }}
-                            />
-                        </li>
-                    ))
+                    otheringredientsArray.map((item, index) => ( <OtherIngredients key={item.key} item={item} index={index}  />))
                 }
             </ul>
             {
@@ -88,18 +80,12 @@ export default function BurgerConstructor({ stateModal, setStateModal }) {
                     type="primary"
                     size="large"
                     onClick={handleOnOrder}
-                    disabled={ bun ? false : true }
-                    >
+                    disabled={bun ? false : true}
+                >
                     Оформить заказ
                 </Button>
             </div>
 
         </section>
     )
-};
-
-BurgerConstructor.propTypes = {
-    data: PropTypes.arrayOf(ingredientPropType),
-    stateModal: PropTypes.object,
-    setStateModal: PropTypes.func.isRequired
 };

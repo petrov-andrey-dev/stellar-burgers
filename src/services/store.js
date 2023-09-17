@@ -1,21 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { reducer as ingredientReducer } from "./ingredientsSlice";
-import { reducer as constructorReducer } from "./constructorSlice";
+import ingredientsSlice from "./ingredientsSlice";
+import modalSlice from "./modalSlice";
+import constructorSlice from "./constructorSlice";
+import orderSlice from "./orderSlice";
 
 export default configureStore({
     reducer: {
-        ingredients: ingredientReducer,
-        constructor: constructorReducer
+        ingredients: ingredientsSlice,
+        constructorData: constructorSlice,
+        modal: modalSlice,
+        order: orderSlice
     }
 });
-
-// export const createStore = (initialState) => {
-//     const store = configureStore({
-//         reducer: {
-//             ingredients: ingredientReducer,
-//             constructor: constructorReducer
-//         },
-//         preloadedState: initialState
-//     })
-//     return store
-// }

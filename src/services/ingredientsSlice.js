@@ -38,4 +38,4 @@ const ingredientsSlice = createSlice({
     }
 });
 
-export const reducer = ingredientsSlice.reducer;
+export default ingredientsSlice.reducer;
