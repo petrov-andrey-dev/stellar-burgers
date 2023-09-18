@@ -7,11 +7,8 @@ import { openModal } from "../../services/modalSlice";
 import { useDrag } from "react-dnd";
 import PropTypes from 'prop-types';
 
-export default function Ingredient({ data, index }) {
+export default function Ingredient({ data }) {
     const dispatch = useDispatch();
-    const [isElementDragging, setElementDrag] = useState(false);
-    const [cursorPosition, setCursorPosition] = useState({});
-    const [elementPosition, setElementPosition] = useState({});
     const [counter, setCounter] = useState(0);
 
     const [, dragRef] = useDrag({
@@ -19,31 +16,7 @@ export default function Ingredient({ data, index }) {
         item: data
     })
     
-    const handleMouseDown = (e) => {
-        setElementDrag(true);
-        setCursorPosition({
-            ...cursorPosition,
-            x: e.clientX - e.target.getBoundingClientRect().left,
-            y: e.clientY - e.target.getBoundingClientRect().top
-        })
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isElementDragging) return;
-        e.stopPropagation();
-        e.preventDefault();
-        setElementPosition({
-            ...elementPosition,
-            x: e.clientX - cursorPosition.x,
-            y: e.clientY - cursorPosition.y
-        });
-    };
-
-    const handleMouseUp = () => {
-        setElementDrag(false);
-    }
     const { bun, otheringredientsArray } = useSelector(state => state.constructorData)
-    
     
     useEffect(() => {
         let count = 0;
@@ -66,9 +39,6 @@ export default function Ingredient({ data, index }) {
             ref={dragRef}
             className={s.item}
             onClick={handleOnIngredient}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
             draggable
         >
             <img src={data.image} alt={data.name} className="pb-2" />
@@ -81,8 +51,6 @@ export default function Ingredient({ data, index }) {
                 counter > 0 &&
                 <Counter count={counter} size="default" />
             }
-                
-            
         </div>
     )
 };

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useMemo } from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import s from "./burger-ingredients.module.css";
 import Ingredient from "../ingredient/ingredient";
@@ -22,9 +22,9 @@ export default function BurgerIngredients() {
         }
     }, [bunInView, sauceInView, mainInView]);
 
-    const bunsArray = ingredients.filter(item => item.type === 'bun');
-    const saucesArray = ingredients.filter(item => item.type === 'sauce');
-    const mainsArray = ingredients.filter(item => item.type === 'main');
+    const bunsArray = useMemo(() => ingredients.filter(item => item.type === 'bun'), [ingredients]);
+    const saucesArray = useMemo(() => ingredients.filter(item => item.type === 'sauce'), [ingredients]);
+    const mainsArray = useMemo(() => ingredients.filter(item => item.type === 'main'), [ingredients]);
     
     function chooseCategory(value) {
         const categoryTitle = document.querySelector(`#${value}`);

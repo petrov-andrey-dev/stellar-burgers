@@ -48,10 +48,17 @@ export default function OtherIngredients({ item, index }) {
             return { index }
         }
     })
+
     dragRef(dropRef(ref));
     return (
-        <li className={s.item} index={index} ref={ref} draggable >
-            <DragIcon type="primary" />
+        <div className={s.item} index={index} draggable >
+          <div 
+            ref={ref}
+            className={s.grab}
+            >
+            <DragIcon type="primary"/>
+          </div>
+            
             <ConstructorElement
                 text={item.name}
                 price={item.price}
@@ -60,7 +67,7 @@ export default function OtherIngredients({ item, index }) {
                     dispatch(del(item.key))
                 }}
             />
-        </li>
+        </div>
     )
 };
 

@@ -13,14 +13,15 @@ import {
 import { openModal } from "../../services/modalSlice";
 import { loadOrderData } from "../../services/orderSlice";
 import { useDrop} from "react-dnd";
-import OtherIngredients from '../other-ingredients/other-ingredients'
+import OtherIngredients from '../other-ingredients/other-ingredients';
+import { useMemo } from "react";
 
 
 export default function BurgerConstructor() {
     const { bun, otheringredientsArray } = useSelector(state => state.constructorData)
     const dispatch = useDispatch();
 
-    const total = otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + (bun ? bun.price * 2 : 0);
+    const total = useMemo(() => otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + (bun ? bun.price * 2 : 0), [bun, otheringredientsArray]);
 
     const handleOnOrder = () => {
         const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
@@ -53,12 +54,12 @@ export default function BurgerConstructor() {
                     extraClass="ml-10 mb-4"
                 />
             }
-            <ul className={`${s.list} ${otheringredientsArray.length > 2 ? s.withScroll : ''} custom-scroll`}>
+            <div className={`${s.list} ${otheringredientsArray.length > 2 ? s.withScroll : ''} custom-scroll`}>
                 {
                     otheringredientsArray &&
                     otheringredientsArray.map((item, index) => ( <OtherIngredients key={item.key} item={item} index={index}  />))
                 }
-            </ul>
+            </div>
             {
                 bun &&
                 <ConstructorElement
@@ -85,7 +86,6 @@ export default function BurgerConstructor() {
                     Оформить заказ
                 </Button>
             </div>
-
         </section>
     )
 };
