@@ -1,11 +1,13 @@
 import done from '../../images/done.svg';
 import s from './order-details.module.css';
+import { useSelector } from 'react-redux';
 
-export default function OrderDetails(props) {
+export default function OrderDetails() {
+    const { orderData, loading } = useSelector(state => state.order)
 
     return (
         <>
-            <h2 className='text text_type_digits-large mt-20'>{props.details.order.number}</h2>
+            <h2 className='text text_type_digits-large mt-20'>{loading ? '...' : orderData.order.number}</h2>
             <h1 className="text text_type_main-medium mt-8">идентификатор заказа</h1>
             <img className={`${s.img} mt-15`} src={done} alt="done" />
             <p className="text text_type_main-default mt-15">Ваш заказ начали готовить</p>

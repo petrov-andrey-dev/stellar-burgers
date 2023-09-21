@@ -1,7 +1,10 @@
 import s from './ingredient-details.module.css';
 import { ingredientPropType } from '../../utils/prop-types';
+import { useSelector } from 'react-redux';
 
-export default function IngredientDetails({ details }) {
+export default function IngredientDetails() {
+    const {details} = useSelector(state => state.modal);
+
     return (
         <>
             <h2 className="text text_type_main-large">

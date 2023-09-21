@@ -18,12 +18,7 @@
     overflow-y: scroll;
 }
 
-.item {
-    all: unset;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+
 
 .info {
     display: flex;

@@ -4,6 +4,7 @@ const HEADERS = { 'Content-Type': 'application/json' };
 const checkResponse = (res) => {
     if (res.ok) {
         return res.json()
+        
     }
     return Promise.reject(`Ошибка: ${res.status}`)
 };
@@ -16,7 +17,7 @@ const getIngredients = () => {
     return request('/ingredients')
 };
 
-const postOrder = (data) => {
+const postOrderRequest = (data) => {
     return request('/orders', {
         method: 'POST',
         body: JSON.stringify({
@@ -26,4 +27,4 @@ const postOrder = (data) => {
     })
 };
 
-export { getIngredients, postOrder }
+export { getIngredients, postOrderRequest }
