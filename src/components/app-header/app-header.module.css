@@ -9,7 +9,7 @@
 }
 
 
-nav {
+.nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -35,7 +35,6 @@ nav {
 .links {
     all: unset;
     display: flex;
-    /* margin-right: 132px; */
 }
 
 .link:hover {
@@ -44,5 +43,4 @@ nav {
 
 .link_type_lk {
     composes: link;
-    /* margin-left: 308px; */
 }

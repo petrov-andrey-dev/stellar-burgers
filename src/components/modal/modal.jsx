@@ -4,18 +4,15 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import s from './modal.module.css';
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from 'prop-types';
-import { closeModal } from "../../services/modalSlice";
-import { useDispatch } from "react-redux";
 
 const rootModal = document.querySelector('#root-modals');
 
-export default function Modal({ children }) {
-    const dispatch = useDispatch();
+export default function Modal({ children, onClose }) {
 
     React.useEffect(() => {
         const onCloseEsc = (e) => {
             if (e.key === 'Escape') {
-                dispatch(closeModal())
+                onClose();
             }
         };
         document.addEventListener('keydown', onCloseEsc);
@@ -26,9 +23,9 @@ export default function Modal({ children }) {
 
     return ReactDOM.createPortal(
         (
-            <ModalOverlay>
+            <ModalOverlay onClose={onClose}>
                 <div className={s.modal} onClick={(e) => e.stopPropagation()}>
-                    <button className={s.close} type="button" onClick={() => dispatch(closeModal())}>
+                    <button className={s.close} type="button" onClick={() => onClose()}>
                         <CloseIcon type="primary" />
                     </button>
                     {children}
@@ -40,5 +37,6 @@ export default function Modal({ children }) {
 };
 
 Modal.propTypes = {
-    children: PropTypes.array.isRequired
+    children: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired
 };

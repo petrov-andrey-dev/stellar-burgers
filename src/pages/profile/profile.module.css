@@ -1,0 +1,16 @@
+.main {
+    display: flex;
+    padding-top: 180px;
+    gap: 60px;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}
