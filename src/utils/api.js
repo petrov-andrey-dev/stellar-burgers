@@ -3,19 +3,44 @@ const HEADERS = { 'Content-Type': 'application/json' };
 const HEADERS_WITH_AUTH = {
     'Content-Type': 'application/json',
     authorization: localStorage.getItem('accessToken')
-}
+};
+
 // проверка ответа
 const checkResponse = (res) => {
     if (res.ok) {
         return res.json()
-        
+
     }
     return Promise.reject(`Ошибка: ${res.status}`)
 };
+
 //обертка всех запросов
 const request = (url, options) => {
     return fetch(`${BASE_URL}${url}`, options).then(checkResponse)
 };
+
+//обработка запроса с обновлением токена
+const requesthWithRefresh = async (url, options) => {
+    try {
+        const res = await fetch(`${BASE_URL}${url}`, options);
+        return await checkResponse(res);
+    } catch (err) {
+        if (err.message === "jwt expired") {
+            const refreshData = await refreshToken();
+            if (!refreshData.success) {
+                return Promise.reject(refreshData);
+            }
+            localStorage.setItem("refreshToken", refreshData.refreshToken);
+            localStorage.setItem("accessToken", refreshData.accessToken);
+            HEADERS_WITH_AUTH.authorization = refreshData.accessToken;
+            const res = await fetch(`${BASE_URL}${url}`, options);
+            return await checkResponse(res);
+        } else {
+            return Promise.reject(err);
+        }
+    }
+};
+
 //получить список ингредиентов
 const getIngredients = () => {
     return request('/ingredients')
@@ -23,7 +48,7 @@ const getIngredients = () => {
 
 //отправить заказ
 const postOrderRequest = (data) => {
-    return request('/orders', {
+    return requesthWithRefresh('/orders', {
         method: 'POST',
         body: JSON.stringify({
             ingredients: data
@@ -31,6 +56,7 @@ const postOrderRequest = (data) => {
         headers: HEADERS_WITH_AUTH
     })
 };
+
 //запрос для получения токена изменения пароля
 const forgotPasswordRequest = (data) => {
     return request('/password-reset', {
@@ -41,6 +67,7 @@ const forgotPasswordRequest = (data) => {
         headers: HEADERS
     })
 };
+
 //запрос на изменение пароля
 const resetPasswordRequest = (data) => {
     return request('/password-reset/reset', {
@@ -51,30 +78,33 @@ const resetPasswordRequest = (data) => {
         }),
         headers: HEADERS
     })
-}
+};
+
 //зарегистрироваться
 const registerRequest = (data) => {
     return request('/auth/register', {
         method: 'POST',
         body: JSON.stringify({
-            email: data.email, 
-            password: data.password, 
-            name: data.name 
+            email: data.email,
+            password: data.password,
+            name: data.name
         }),
         headers: HEADERS
     })
-}
+};
+
 //залогиниться
 const loginRequest = (data) => {
     return request('/auth/login', {
         method: 'POST',
         body: JSON.stringify({
-            email: data.email, 
+            email: data.email,
             password: data.password
         }),
         headers: HEADERS
     })
-}
+};
+
 //разлогиниться
 const logoutRequest = () => {
     return request('/auth/logout', {
@@ -85,6 +115,7 @@ const logoutRequest = () => {
         headers: HEADERS
     })
 };
+
 //запрос на обновление токена
 const refreshToken = () => {
     return request('/auth/token', {
@@ -95,54 +126,36 @@ const refreshToken = () => {
         headers: HEADERS
     })
 };
+
 //получить данные пользователя
 const getUserRequest = () => {
-    return request('/auth/user', {
+    return requesthWithRefresh('/auth/user', {
         method: 'GET',
         headers: HEADERS_WITH_AUTH
     })
 };
-//получить данные пользователя с обновлением токена
-const getUsertRequestWR = async () => {
-    try {
-        const res = await getUserRequest();
-        return res;
-    } catch (err) {
-        if (err.message === 'jwt expired') {
-            const refreshData = await refreshToken();
-            if (!refreshData.success) {
-                return Promise.reject(refreshData);
-            }
-            localStorage.setItem('refreshToken', refreshData.refreshToken);
-            localStorage.setItem('accessToken', refreshData.accessToken);
-            const res = await getUserRequest();
-            return res;
-        } else {
-            return Promise.reject(err);
-        }
-    }
-};
 
+//изменить данные пользователя
 const updateUserRequest = (data) => {
-    return request('/auth/user', {
+    return requesthWithRefresh('/auth/user', {
         method: 'PATCH',
         body: JSON.stringify({
             name: data.name,
-            email: data.email, 
+            email: data.email,
             password: data.password
         }),
         headers: HEADERS_WITH_AUTH
     })
-}
+};
 
-export { 
+export {
     getIngredients,
     postOrderRequest,
-    registerRequest, 
+    registerRequest,
     loginRequest,
     logoutRequest,
     forgotPasswordRequest,
     resetPasswordRequest,
-    getUsertRequestWR,
+    getUserRequest,
     updateUserRequest
- }
+}

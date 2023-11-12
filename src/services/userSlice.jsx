@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { registerRequest, loginRequest, logoutRequest, getUsertRequestWR, updateUserRequest } from "../utils/api";
+import {
+    registerRequest,
+    loginRequest,
+    logoutRequest,
+    getUserRequest,
+    updateUserRequest
+} from "../utils/api";
 
 export const register = createAsyncThunk(
     'user/register',
@@ -23,6 +29,8 @@ export const logout = createAsyncThunk(
     'user/logout',
     async (data) => {
         const res = await logoutRequest(data)
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         return res;
     });
 
@@ -35,8 +43,8 @@ export const updateUser = createAsyncThunk(
 
 export const getUser = () => {
     return (dispatch) => {
-        return getUsertRequestWR()
-        .then(res => dispatch(setUser(res.user)))
+        return getUserRequest()
+            .then(res => dispatch(setUser(res.user)))
     }
 };
 

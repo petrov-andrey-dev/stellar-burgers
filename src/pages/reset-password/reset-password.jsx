@@ -1,26 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PasswordInput, Button, Input } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import s from "./reset-password.module.css";
 import { resetPasswordRequest } from "../../utils/api";
 
 export default function ResetPassword() {
-    const [pass, setPass] = useState('');
+    const [password, setPassword] = useState('');
     const [token, setToken] = useState('');
+    
+    const location = useLocation();
+    const navigate =useNavigate();
 
     const handleSubmit = e => {
         e.preventDefault();
-        resetPasswordRequest({password: pass, token: token});
-    }
+        resetPasswordRequest({password, token});
+    };
 
+    useEffect(() => {
+        if (location.state?.from?.pathname !== '/forgot-password') {
+            navigate('/forgot-password')
+        }
+    }, []);
 
     return (
         <main className={s.main}>
             <h1 className="text text_type_main-medium mb-6">Восстановление пароля</h1>
             <form className={s.form} onSubmit={handleSubmit}>
                 <PasswordInput
-                    onChange={e => setPass(e.target.value)}
-                    value={pass}
+                    onChange={e => setPassword(e.target.value)}
+                    value={password}
                     name={'password'}
                     placeholder={'Введите новый пароль'}
                     extraClass="mb-6"
@@ -46,4 +54,4 @@ export default function ResetPassword() {
             </div>
         </main>
     )
-}
+};
