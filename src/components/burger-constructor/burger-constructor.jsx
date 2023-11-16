@@ -1,34 +1,29 @@
-import {
-    ConstructorElement,
-    CurrencyIcon,
-    Button
-} from "@ya.praktikum/react-developer-burger-ui-components";
+import { ConstructorElement, CurrencyIcon, Button } from "@ya.praktikum/react-developer-burger-ui-components";
 import s from "./burger-constructor.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { 
-    reset, 
-    addBun, 
-    add 
-} from "../../services/constructorSlice";
+import { reset, addBun, add } from "../../services/constructorSlice";
 import { openModal } from "../../services/modalSlice";
 import { loadOrderData } from "../../services/orderSlice";
 import { useDrop} from "react-dnd";
 import OtherIngredients from '../other-ingredients/other-ingredients';
 import { useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom"
 
 
 export default function BurgerConstructor() {
     const { bun, otheringredientsArray } = useSelector(state => state.constructorData)
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const total = useMemo(() => otheringredientsArray.reduce((acc, p) => acc + p.price, 0) + (bun ? bun.price * 2 : 0), [bun, otheringredientsArray]);
 
     const handleOnOrder = () => {
         const orderDataOutput = [bun._id].concat(otheringredientsArray.map(i => i._id));
-
         dispatch(loadOrderData(orderDataOutput))
-        dispatch(openModal({ type: 'order' }))
+        dispatch(openModal())
         dispatch(reset())
+        navigate('/order', { state: { background: location }} );
     };
 
     const [, dropTarget] = useDrop({

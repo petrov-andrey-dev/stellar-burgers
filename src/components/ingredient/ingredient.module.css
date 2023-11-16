@@ -6,3 +6,7 @@
     position: relative;
     cursor: pointer;
 }
+
+.link {
+    all: unset;
+}

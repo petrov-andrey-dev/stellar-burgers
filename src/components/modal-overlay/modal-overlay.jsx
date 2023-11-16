@@ -1,13 +1,10 @@
 import s from './modal-overlay.module.css'
 import PropTypes from 'prop-types';
-import { closeModal } from '../../services/modalSlice';
-import { useDispatch } from 'react-redux';
 
-export default function ModalOverlay({children}) {
-    const dispatch = useDispatch();
+export default function ModalOverlay({children, onClose}) {
 
     return (
-        <div className={s.overlay} onClick={() => dispatch(closeModal())}>
+        <div className={s.overlay} onClick={() => onClose()}>
             {children}
         </div>
     )
