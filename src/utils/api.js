@@ -147,6 +147,10 @@ const updateUserRequest = (data) => {
         headers: HEADERS_WITH_AUTH
     })
 };
+//запрос выбранного заказа
+const getSelectedOrder = (data) => {
+    return request(`/orders/${data}`)
+};
 
 export {
     getIngredients,
@@ -157,5 +161,6 @@ export {
     forgotPasswordRequest,
     resetPasswordRequest,
     getUserRequest,
-    updateUserRequest
+    updateUserRequest,
+    getSelectedOrder
 }

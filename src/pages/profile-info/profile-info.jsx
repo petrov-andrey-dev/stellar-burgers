@@ -5,36 +5,36 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../services/userSlice";
 
 export default function ProfileInfo() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [changed, setChanged] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [changed, setChanged] = useState(false);
 
-    const dispatch = useDispatch();
-    const { user } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+  const { user } = useSelector(state => state.user);
 
-    const currentInfo = (user) => {
-      setName(user.name);
-      setEmail(user.email);
-    }
+  const currentInfo = (user) => {
+    setName(user.name);
+    setEmail(user.email);
+  };
 
-    useEffect(() => {
-      currentInfo(user);
-    }, []);
+  useEffect(() => {
+    currentInfo(user);
+  }, []);
 
-    const handleSubmit = e => {
-        e.preventDefault();
-        dispatch(updateUser({email, password, name}));
-        setChanged(false);
-    }
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(updateUser({ email, password, name }));
+    setChanged(false);
+  };
 
-    const clickCancelHandler = () => {
-      currentInfo(user);
-      setChanged(false);
-    }
+  const clickCancelHandler = () => {
+    currentInfo(user);
+    setChanged(false);
+  };
 
-    return (
-        <form className={s.form} onSubmit={handleSubmit}>
+  return (
+    <form className={s.form} onSubmit={handleSubmit}>
       <Input
         type="text"
         placeholder="Имя"
@@ -80,5 +80,5 @@ export default function ProfileInfo() {
         {changed && <Button htmlType="submit">Сохранить</Button>}
       </div>
     </form>
-    )
-}
+  )
+};

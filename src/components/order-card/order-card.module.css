@@ -1,0 +1,45 @@
+.card {
+    /* width: 100%; */
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    background-color: #1C1C21;
+    border-radius: 40px;
+    gap: 24px;
+    cursor: pointer;
+}
+
+.link {
+    all: unset;
+}
+
+.cardTop {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardButtom {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingtedients {
+    display: flex;
+    padding-left: 10px;
+}
+
+.pic {
+    width: 64px;
+    height: 64px;
+    margin: -10px;
+    border-radius: 100px;
+    border: 2px solid #4C4CFF;
+    background: #131316;
+    object-fit: cover;
+}
+
+.price {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
