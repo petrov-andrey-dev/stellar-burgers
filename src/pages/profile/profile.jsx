@@ -35,7 +35,7 @@ export default function Profile() {
                     )}
                 </NavLink>
             </nav>
-            <div>
+            <div className={s.content}>
                 <Outlet />
             </div>
         </main>

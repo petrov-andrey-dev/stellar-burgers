@@ -1,11 +1,5 @@
-.main {
-    display: flex;
-    flex-direction: column;
-    padding-top: 180px;
-    align-items: center;
-}
-
 .form {
+    padding-top: 180px;
     display: flex;
     flex-direction: column;
     align-items: center;
