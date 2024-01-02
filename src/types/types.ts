@@ -26,7 +26,15 @@ export type TIngredient = {
     ingredients: string[];
     name: string;
     number: number;
+    owner?: string;
     status: string;
     updatedAt: string;
+    __v?: number;
     _id: string;
   }
+
+  export type TOrderData = {
+    name: string;
+    order: TOrder;
+    success: boolean;
+}

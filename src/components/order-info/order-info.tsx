@@ -28,12 +28,14 @@ export default function OrderInfo() {
             if (order) {
                 return order;
             }
-            return state.order.selectedOrder?.order
+            return state.order.selectedOrder
         }
     });
 
     const orderIngredients = useMemo(() => {
         if (order) {
+            console.log(order);
+            
             return order.ingredients.map(id => {
                 return ingredients.find(item => item._id === id) 
             })

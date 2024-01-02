@@ -3,7 +3,7 @@ import {
   DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useRef } from 'react';
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 import { del, moveItem } from "../../services/constructorSlice";
 import { TIngredient } from "../../types/types";
 import { useAppDispatch } from "../../utils/hook";

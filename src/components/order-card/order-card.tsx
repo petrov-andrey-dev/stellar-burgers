@@ -35,6 +35,10 @@ export default function OrderCard({ data }: TOrderCoardProps) {
                 : '/'
     }, [location, data.number]);
 
+    if (orderIngredients === null) {
+        return null;
+    };
+
     return (
             <Link to={url} state={{ background: location }} className={s.link} >
             <div className={s.card} onClick={handleOnOrder}>
@@ -62,6 +66,5 @@ export default function OrderCard({ data }: TOrderCoardProps) {
                 </div>
             </div>
         </Link>
-        
     )
-}
+};

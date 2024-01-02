@@ -1,3 +1,5 @@
+import { TIngredient, TOrder, TOrderData, TUser } from "../types/types";
+
 const BASE_URL = 'https://norma.nomoreparties.space/api';
 const HEADERS = new Headers()
 HEADERS.set('Content-Type', 'application/json');
@@ -7,7 +9,7 @@ HEADERS_WITH_AUTH.append('authorization', localStorage.getItem('accessToken') ||
 
 
 // проверка ответа
-const checkResponse = (res: Response): Promise<any> => {
+const checkResponse = <T>(res: Response): Promise<T> => {
     if (res.ok) {
         return res.json()
     }
@@ -15,15 +17,15 @@ const checkResponse = (res: Response): Promise<any> => {
 };
 
 //обертка всех запросов
-const request = (url: string, options?: RequestInit) => {
-    return fetch(`${BASE_URL}${url}`, options).then(checkResponse)
+const request = <T>(url: string, options?: RequestInit) => {
+    return fetch(`${BASE_URL}${url}`, options).then(checkResponse<T>)
 };
 
 //обработка запроса с обновлением токена
-const requesthWithRefresh = async (url: string, options?: RequestInit) => {
+const requesthWithRefresh = async <T>(url: string, options?: RequestInit) => {
     try {
         const res = await fetch(`${BASE_URL}${url}`, options);
-        return await checkResponse(res);
+        return await checkResponse<T>(res);
     } catch (err: any) {
         if (err.message === "jwt expired") {
             const refreshData = await refreshToken();
@@ -34,7 +36,7 @@ const requesthWithRefresh = async (url: string, options?: RequestInit) => {
             localStorage.setItem("accessToken", refreshData.accessToken);
             HEADERS_WITH_AUTH.set('authorization', refreshData.accessToken);
             const res = await fetch(`${BASE_URL}${url}`, options);
-            return await checkResponse(res);
+            return await checkResponse<T>(res);
         } else {
             return Promise.reject(err);
         }
@@ -42,13 +44,18 @@ const requesthWithRefresh = async (url: string, options?: RequestInit) => {
 };
 
 //получить список ингредиентов
+type TGetIngredients = {
+    success: boolean;
+    data: TIngredient[];
+}
+
 const getIngredients = () => {
-    return request('/ingredients')
+    return request<TGetIngredients>('/ingredients')
 };
 
 //отправить заказ
 const postOrderRequest = (data: string[]) => {
-    return requesthWithRefresh('/orders', {
+    return requesthWithRefresh<TOrderData>('/orders', {
         method: 'POST',
         body: JSON.stringify({
             ingredients: data
@@ -69,20 +76,32 @@ const forgotPasswordRequest = (data: string) => {
 };
 
 //запрос на изменение пароля
-const resetPasswordRequest = (data: {password: string, token: string}) => {
+type TResetPassData = {
+    password: string;
+    token: string;
+}
+
+const resetPasswordRequest = ({password, token}: TResetPassData) => {
     return request('/password-reset/reset', {
         method: 'POST',
         body: JSON.stringify({
-            password: data.password,
-            token: data.token
+            password: password,
+            token: token
         }),
         headers: HEADERS
     })
 };
 
 //зарегистрироваться
+type TRegisterRequest = {
+    success: boolean;
+    user: TUser;
+    accessToken: string;
+    refreshToken: string;
+}
+
 const registerRequest = (data: {email: string, password: string, name: string}) => {
-    return request('/auth/register', {
+    return request<TRegisterRequest>('/auth/register', {
         method: 'POST',
         body: JSON.stringify({
             email: data.email,
@@ -94,8 +113,15 @@ const registerRequest = (data: {email: string, password: string, name: string}) 
 };
 
 //залогиниться
+type TLoginRequest = {
+    success: boolean;
+    user: TUser;
+    accessToken: string;
+    refreshToken: string;
+}
+
 const loginRequest = (data: {email: string, password: string}) => {
-    return request('/auth/login', {
+    return request<TLoginRequest>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({
             email: data.email,
@@ -117,8 +143,14 @@ const logoutRequest = () => {
 };
 
 //запрос на обновление токена
+type TRafreshToken = {
+    success: boolean;
+    accessToken: string;
+    refreshToken: string;
+}
+
 const refreshToken = () => {
-    return request('/auth/token', {
+    return request<TRafreshToken>('/auth/token', {
         method: "POST",
         body: JSON.stringify({
             token: localStorage.getItem('refreshToken')
@@ -128,16 +160,26 @@ const refreshToken = () => {
 };
 
 //получить данные пользователя
+type TGetUserRequest = {
+    success: boolean;
+    user: TUser;
+}
+
 const getUserRequest = () => {
-    return requesthWithRefresh('/auth/user', {
+    return requesthWithRefresh<TGetUserRequest>('/auth/user', {
         method: 'GET',
         headers: HEADERS_WITH_AUTH
     })
 };
 
 //изменить данные пользователя
+type TUpdateUserRequest = {
+    success: boolean;
+    user: TUser;
+}
+
 const updateUserRequest = (data: {name: string, email: string, password: string}) => {
-    return requesthWithRefresh('/auth/user', {
+    return requesthWithRefresh<TUpdateUserRequest>('/auth/user', {
         method: 'PATCH',
         body: JSON.stringify({
             name: data.name,
@@ -148,8 +190,13 @@ const updateUserRequest = (data: {name: string, email: string, password: string}
     })
 };
 //запрос выбранного заказа
+type TGetSelectedOrder = {
+    success: boolean;
+    orders: TOrder[];
+}
+
 const getSelectedOrder = (data: string) => {
-    return request(`/orders/${data}`)
+    return request<TGetSelectedOrder>(`/orders/${data}`)
 };
 
 export {
