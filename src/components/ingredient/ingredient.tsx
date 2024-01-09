@@ -29,7 +29,7 @@ export default function Ingredient({ data }: TIngredientProps) {
         let count = 0;
         if (bun !== null) {
             if (data.type === 'bun') {
-                bun._id === data._id ? count++ : count = 0;
+                bun._id === data._id ? count = 2 : count = 0;
             } else {
                 count = otheringredientsArray.filter(item => item._id === data._id).length
             }

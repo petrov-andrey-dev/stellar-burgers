@@ -34,8 +34,6 @@ export default function OrderInfo() {
 
     const orderIngredients = useMemo(() => {
         if (order) {
-            console.log(order);
-            
             return order.ingredients.map(id => {
                 return ingredients.find(item => item._id === id) 
             })
@@ -46,11 +44,10 @@ export default function OrderInfo() {
         const resultArr: TIngredient[] = [];
         if (orderIngredients) {
             orderIngredients.map(item => {
-                const ingredients = orderIngredients.filter(ing => ing?._id === item?._id)
-                if (resultArr.length || !resultArr.find(i => i._id === item?._id)) {
+                const ingredients = orderIngredients.filter(ing => ing?._id === item?._id)                
+                if (!resultArr.find(i => i._id === item?._id)) {
                     if (ingredients[0] !== undefined) {
-                        const ingWithcount = {...ingredients[0], count: ingredients.length}
-                        resultArr.push(ingWithcount)
+                        resultArr.push({...ingredients[0], count: ingredients.length})
                     }
                 }
                 return resultArr;

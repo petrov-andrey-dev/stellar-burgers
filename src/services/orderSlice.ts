@@ -26,8 +26,6 @@ export const loadOrderData = createAsyncThunk(
     'order/loadOrderData',
     async (data: string[]) => {
         const response = await postOrderRequest(data)
-        console.log(response);
-        
         return response;
     }
 );
@@ -36,7 +34,6 @@ export const loadSelectedOrder = createAsyncThunk(
     'order/loadSelectedOrder',
     async (data: string) => {
         const response = await getSelectedOrder(data)
-        console.log(response);
         return response;
     }
 );

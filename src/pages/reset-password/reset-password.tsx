@@ -1,24 +1,28 @@
 import { Button, Input, PasswordInput } from "@ya.praktikum/react-developer-burger-ui-components";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { resetPasswordRequest } from "../../utils/api";
+import { resetPassword } from "../../services/userSlice";
+import { useAppDispatch, useAppSelector } from "../../utils/hook";
 import s from "./reset-password.module.css";
 
 export default function ResetPassword() {
     const [password, setPassword] = useState('');
     const [token, setToken] = useState('');
+    const { message } = useAppSelector(state => state.user) 
     
     const location = useLocation();
     const navigate =useNavigate();
+    const dispatch = useAppDispatch();
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        resetPasswordRequest({password, token});
+        dispatch(resetPassword({password, token}));
+        if (message === 'Password successfully reset') navigate('/login');
     };
 
     useEffect(() => {
         if (location.state?.from?.pathname !== '/forgot-password') {
-            navigate('/forgot-password')
+            navigate('/forgot-password');
         }
     }, []);
 

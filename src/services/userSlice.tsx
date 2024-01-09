@@ -1,10 +1,12 @@
 import { Action, PayloadAction, ThunkAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TUser } from "../types/types";
 import {
+    TResetPassData,
     getUserRequest,
     loginRequest,
     logoutRequest,
     registerRequest,
+    resetPasswordRequest,
     updateUserRequest
 } from "../utils/api";
 import { RootState } from "./store";
@@ -14,13 +16,15 @@ type TUserSlice = {
     isAuthChecked: boolean;
     loading: boolean;
     error: string | null;
+    message: string | null;
 }
 
 const initialState: TUserSlice = {
     user: null,
     isAuthChecked: false,
     loading: false,
-    error: null
+    error: null,
+    message: null,
 }
 
 export const register = createAsyncThunk(
@@ -54,6 +58,13 @@ export const updateUser = createAsyncThunk(
     'user/updateUser',
     async (data: TUser) => {
         const res = await updateUserRequest(data);
+        return res;
+    });
+
+export const resetPassword = createAsyncThunk(
+    'user/resetPassword',
+    async ({ password, token }: TResetPassData) => {
+        const res = await resetPasswordRequest({ password, token });
         return res;
     });
 
@@ -108,6 +119,10 @@ const userSlice = createSlice({
             .addCase(updateUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload.user;
+            })
+            .addCase(resetPassword.fulfilled, (state, action) => {
+                state.loading = false;
+                state.message = action.payload.message;
             })
             .addMatcher(
                 (action) => action.type.endsWith('/pending'),
