@@ -2,11 +2,13 @@ import { TIngredient, TOrder, TOrderData, TUser } from "../types/types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api';
 const HEADERS = new Headers()
-HEADERS.set('Content-Type', 'application/json');
-const HEADERS_WITH_AUTH = new Headers();
-HEADERS_WITH_AUTH.append('Content-Type', 'application/json');
-HEADERS_WITH_AUTH.append('authorization', localStorage.getItem('accessToken') || '')
 
+const HEADERS_WITH_AUTH = new Headers();
+const setHeaders = () => {
+    HEADERS.set('Content-Type', 'application/json');
+    HEADERS_WITH_AUTH.set('Content-Type', 'application/json');
+    HEADERS_WITH_AUTH.set('authorization', localStorage.getItem('accessToken') || '');
+}
 
 // проверка ответа
 const checkResponse = <T>(res: Response): Promise<T> => {
@@ -18,6 +20,7 @@ const checkResponse = <T>(res: Response): Promise<T> => {
 
 //обертка всех запросов
 const request = <T>(url: string, options?: RequestInit) => {
+    setHeaders();
     return fetch(`${BASE_URL}${url}`, options).then(checkResponse<T>)
 };
 
@@ -76,13 +79,18 @@ const forgotPasswordRequest = (data: string) => {
 };
 
 //запрос на изменение пароля
-type TResetPassData = {
+export type TResetPassData = {
     password: string;
     token: string;
 }
 
+type TResetPasswordRequest = {
+    message: string;
+    success: boolean;
+}
+
 const resetPasswordRequest = ({password, token}: TResetPassData) => {
-    return request('/password-reset/reset', {
+    return request<TResetPasswordRequest>('/password-reset/reset', {
         method: 'POST',
         body: JSON.stringify({
             password: password,

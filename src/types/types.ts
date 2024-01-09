@@ -19,6 +19,7 @@ export type TIngredient = {
     email: string;
     name: string;
     password: string;
+    token?: string;
   }
 
   export type TOrder = {

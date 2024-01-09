@@ -24,7 +24,7 @@ export default function BurgerConstructor() {
     const handleOnOrder = () => {
         if (user) {
             const orderDataOutput = bun 
-                ? [bun._id].concat(otheringredientsArray.map(i => i._id))
+                ? [bun._id].concat(otheringredientsArray.map(i => i._id)).concat([bun._id])
                 : otheringredientsArray.map(i => i._id)
             dispatch(loadOrderData(orderDataOutput))
             dispatch(openModal(orderData))
