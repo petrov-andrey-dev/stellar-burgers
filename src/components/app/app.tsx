@@ -14,6 +14,7 @@ import ResetPassword from "../../pages/reset-password/reset-password";
 import { loadIngredients } from "../../services/ingredientsSlice";
 import { closeModal } from "../../services/modalSlice";
 import { checkUserAuth } from "../../services/userSlice";
+import { setHeaders } from "../../utils/api";
 import { useAppDispatch, useAppSelector } from "../../utils/hook";
 import AppHeader from "../app-header/app-header";
 import IngredientDetails from "../ingredient-details/ingredient-details";
@@ -41,6 +42,10 @@ function App() {
 
   useEffect(() => {
     dispatch(checkUserAuth());
+  }, []);
+
+  useEffect(() => {
+    setHeaders();
   }, []);
 
   return (

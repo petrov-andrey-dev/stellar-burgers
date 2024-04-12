@@ -30,7 +30,7 @@ export default function Feed() {
         <main className={`${s.main} mt-10`}>
             <div className='mr-15'>
                 <h2 className='text text_type_main-large'>Лента заказов</h2>
-                <div className={`${s.feed} custom-scroll mt-10 p-2`}>
+                <div className={`${s.feed} custom-scroll mt-10 pr-2`}>
                     {
                         orders.map(order => (
                             <OrderCard data={order} key={order._id} />

@@ -1,10 +1,10 @@
 import { TIngredient, TOrder, TOrderData, TUser } from "../types/types";
 
 const BASE_URL = 'https://norma.nomoreparties.space/api';
-const HEADERS = new Headers()
+export const HEADERS = new Headers()
 
-const HEADERS_WITH_AUTH = new Headers();
-const setHeaders = () => {
+export const HEADERS_WITH_AUTH = new Headers();
+export const setHeaders = () => {
     HEADERS.set('Content-Type', 'application/json');
     HEADERS_WITH_AUTH.set('Content-Type', 'application/json');
     HEADERS_WITH_AUTH.set('authorization', localStorage.getItem('accessToken') || '');
@@ -20,7 +20,6 @@ const checkResponse = <T>(res: Response): Promise<T> => {
 
 //обертка всех запросов
 const request = <T>(url: string, options?: RequestInit) => {
-    setHeaders();
     return fetch(`${BASE_URL}${url}`, options).then(checkResponse<T>)
 };
 

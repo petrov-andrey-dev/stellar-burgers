@@ -50,7 +50,7 @@ export default function BurgerIngredients() {
             </div>
             <div className={`${s.ingredients} custom-scroll mt-10`}>
                 <h2 id="buns" className="text text_type_main-medium ">Булки</h2>
-                <div className={`${s.items} pr-1 pl-4`} ref={bunRef}>
+                <div className={`${s.items} pr-1`} ref={bunRef}>
                     {
                         bunsArray.map(item => (
                             <Ingredient data={item} key={item._id} />
@@ -58,7 +58,7 @@ export default function BurgerIngredients() {
                     }
                 </div>
                 <h2 id="sauces" className="text text_type_main-medium pt-10">Соусы</h2>
-                <div className={`${s.items} pr-1 pl-4`}  ref={sauceRef}>
+                <div className={`${s.items} pr-1`}  ref={sauceRef}>
                     {
                         saucesArray.map(item => (
                             <Ingredient data={item} key={item._id} />
@@ -66,7 +66,7 @@ export default function BurgerIngredients() {
                     }
                 </div>
                 <h2 id="mains" className="text text_type_main-medium pt-10">Начинки</h2>
-                <div className={`${s.items} pr-1 pl-4`} ref={mainRef}>
+                <div className={`${s.items} pr-1`} ref={mainRef}>
                     {
                         mainsArray.map(item => (
                             <Ingredient data={item} key={item._id} />
